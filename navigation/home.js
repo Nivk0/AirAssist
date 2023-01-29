@@ -1,10 +1,45 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Info from './info';
 const Stack = createNativeStackNavigator();
+import axios from 'axios';
+import moment from 'moment';
 
 const Home = () => {
+    const [flightNumber, setFlightNumber] = useState('');
+    const [date, setDate] = useState('');
+    const [origin, setOrigin] = useState('');
+    const [departureTime, setDepartureTime] = useState('');
+    const [arrivalTime, setArrivalTime] = useState('');
+    const [destination, setDestination] = useState('');
+    const [duration, setDuration] = useState('');
+
+    const handleButtonPress = async () => {
+        try {
+            if (date && flightNumber && origin) {
+          const response = await axios.get(`https://airassistant.herokuapp.com/flights?date=${date}&flightNumber=${flightNumber}&origin=${origin}`);
+          const data = await response.data[0];
+          setDestination(data.destination.code);
+          setDuration(data.duration.locale);
+          setDepartureTime(data.departureTime);
+          setArrivalTime(data.arrivalTime);
+          console.log(duration);
+          navigation.navigate('Info', { departureTime:departureTime, arrivalTime:arrivalTime, destination:destination, duration:duration})
+          setFlightNumber(null);
+          setDate(null);
+          setOrigin(null);
+            }
+            else {
+                alert("please input all fields")
+            }
+         
+        } catch (error) {
+          console.error(error);
+        }
+    };
+
 const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -13,16 +48,22 @@ const navigation = useNavigation();
         <TextInput
           style={styles.input}
           placeholder="Flight Number"
+          value={flightNumber}
+          onChangeText={text => setFlightNumber(text)}
         />
         <TextInput
           style={styles.input}
           placeholder="Departure Date"
+          value={date}
+          onChangeText={text => setDate(text)}
         />
         <TextInput
           style={styles.input}
-          placeholder="Departure Location"
+          placeholder="Departure Airport Code"
+          value={origin}
+          onChangeText={text => setOrigin(text)}
         />
-        <TouchableOpacity style={styles.appButtonContainer} onPress={() => navigation.navigate('Info')}>
+        <TouchableOpacity style={styles.appButtonContainer} onPress={handleButtonPress}>
             <Text style={styles.appButtonText}>Submit</Text>
         </TouchableOpacity>
       </View>
@@ -37,6 +78,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  
   box: {
     backgroundColor: 'white',
     width: '80%',

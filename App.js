@@ -27,7 +27,7 @@ function Nav() {
           }}>
         {<Tab.Screen name = "Home" component = {Home}/> }
 
-        {<Tab.Screen name = "Alert" component = {Alert}/> }       
+        {<Tab.Screen name = "Alerts" component = {Alert}/> }       
         {<Tab.Screen name = "Map" component = {Map}/> }
       </Tab.Navigator>
   );

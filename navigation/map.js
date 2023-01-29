@@ -1,41 +1,71 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { useState, useEffect } from 'react';
+import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapViewDirections, { getDirections } from 'react-native-maps-directions';
+import Geocoder from 'react-native-geocoding';
 
-function Map() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.homeTitle}>Map</Text>
-      <RoundedCornersExample></RoundedCornersExample>
-    </View>
+const Map = () => {
+// const [location, setLocation] = useState({
+//   latitude: 32.904836451470985,
+//   longitude: -97.04454462083804})
+const randomCoords = {
+latitude: 32.904836451470985,
+longitude: -97.04254462083804,
+};
 
-  );
+Geocoder.init('AIzaSyBkHWBCoweivQEE-m52kT5hGbgRGRmWBL0')
+
+var loc = {
+  latitude: 32.904836451470985,
+  longitude: -97.04454462083804
 }
 
-function RoundedCornersExample() {
-  return (
-    <SafeAreaView
-      style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <TouchableOpacity style={{ backgroundColor: '#147EFB', padding: 10 }}>
-        <Text style={{ color: '#fff' }}>Click me!</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
-  );
-}
+Geocoder.from("dfw gate d14").then(json => {
+      loc = {
+        lattitude: json.results[0].geometry.location["lat"],
+        longitude: json.results[0].geometry.location["lng"],
+      }
+      console.log(loc);
+    }).catch(error => console.warn(error));
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#086591',
-  },
-  homeTitle:{
-    color: 'gray',
-    top: 100,
-    //fontFamily: 'Montserrat-Regular',
-    fontSize: 30,
-    alignSelf: 'center',
-    
-  }
-});
+const [location, setLocation] = useState(loc)
 
-export default Map
+return (
+    <MapView
+    provider={"google"}
+    style={{ flex: 1 }}
+    initialRegion={{
+    latitude: 32.904836451470985,
+    longitude: -97.04254462083804,
+    latitudeDelta: 0.00922,
+    longitudeDelta: 0.00421,
+    }}
+    >
+
+    <Marker
+    coordinate={{
+    latitude: 32.90470617020362,
+    longitude: -97.04147250849363,
+    }}
+    title="My Marker"
+    description="This is my marker"
+    />
+    <Marker
+        coordinate={location}
+        title="Random Marker"
+        description="This is a random marker"
+      />
+      <MapViewDirections
+        origin= {{
+          latitude: 32.90470617020362,
+          longitude: -97.04147250849363,
+          }}
+        destination= {location}
+        apikey={'AIzaSyBkHWBCoweivQEE-m52kT5hGbgRGRmWBL0'}
+        strokeWidth={3}
+        strokeColor="hotpink"
+      />
+    </MapView>
+);
+};
+
+export default Map;
