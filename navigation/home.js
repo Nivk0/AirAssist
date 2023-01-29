@@ -1,41 +1,78 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView, TouchableOpacity, TouchableHighlight } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+const Stack = createNativeStackNavigator();
 
-function Home() {
+const Home = () => {
+const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Text style={styles.homeTitle}>Air Assistant</Text>
-      <RoundedCornersExample></RoundedCornersExample>
+      <View style={styles.box}>
+        <Text style={styles.header}>Air Assistant</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Flight Number"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Departure Date"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Departure Location"
+        />
+        <TouchableOpacity style={styles.appButtonContainer} onPress={() => navigation.navigate('Info')}>
+            <Text style={styles.appButtonText}>Submit</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-
   );
-}
-
-function RoundedCornersExample() {
-  return (
-    <SafeAreaView
-      style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <TouchableOpacity style={{ backgroundColor: '#147EFB', padding: 10 }}>
-        <Text style={{ color: '#fff' }}>Click me!</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
-  );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#086591',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  homeTitle:{
-    color: 'gray',
-    top: 100,
-    //fontFamily: 'Montserrat-Regular',
-    fontSize: 30,
-    alignSelf: 'center',
+  box: {
+    backgroundColor: 'white',
+    width: '80%',
+    height: '50%',
+    borderRadius: 10,
+    alignItems: 'center',
+    padding: 20,
+  },
+  header: {
+    fontSize: 24,
+    marginBottom: 20,
+    fontWeight: "bold",
+    color: "gray",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    marginVertical: 10,
+    width: '90%',
+  },
+  appButtonContainer: {
+    backgroundColor: "#086591",
+    borderRadius: 300,
+    marginTop: 10,
+    width: 150,
+    height: 50
     
-  }
+  },
+  appButtonText: {
+    fontSize: 22,
+    color: "white",
+    fontWeight: "bold",
+    alignSelf: "center",
+    marginTop: 10.7
+  },
 });
 
-export default Home
+export default Home;

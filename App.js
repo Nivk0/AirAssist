@@ -5,13 +5,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './navigation/home';
 import Map from './navigation/map';
+import Info from './navigation/info';
 import Alert from './navigation/alert';
 
 
 const Tab = createBottomTabNavigator();
-function App() {
+const Stack = createNativeStackNavigator();
+function Nav() {
   return (
-    <NavigationContainer>
       <Tab.Navigator
         screenOptions={{
           headerStyle:
@@ -25,12 +26,24 @@ function App() {
           }
           }}>
         {<Tab.Screen name = "Home" component = {Home}/> }
-        {<Tab.Screen name = "Alert" component = {Alert}/> }
-        {<Tab.Screen name = "Map" component = {Map}/> }
-        
 
+        {<Tab.Screen name = "Alert" component = {Alert}/> }       
+        {<Tab.Screen name = "Map" component = {Map}/> }
       </Tab.Navigator>
-      </NavigationContainer>
+  );
+}
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+        name="Nav"
+        component={Nav}
+        options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Info" component={Info} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 const styles = StyleSheet.create({
@@ -39,4 +52,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
 export default App;
